@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ContentFlow — Calendario de Contenido</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://flmgqwtydjxhmjqnkdjm.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsbWdxd3R5ZGp4aG1qcW5rZGptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NTI2NDQsImV4cCI6MjA5MTIyODY0NH0.lO9BI0qu4fl7kETRm2_k0dbe8NOfCjHpbuml1w_3gmg';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+</script>
 <style>
 :root {
   --bg: #F7F6F3;
@@ -1267,7 +1273,6 @@ body {
 
 <script>
 // ─── DATA ───────────────────────────────────────────────────────────────────
-const COLORS = ['#DBEAFE','#D1FAE5','#FEE2E2','#FCE7F3','#FEF3C7'];
 const DOT_COLORS = ['#3B82F6','#10B981','#EF4444','#EC4899','#F59E0B'];
 
 let state = {
@@ -1277,51 +1282,82 @@ let state = {
   calMonth: new Date().getMonth(),
   calYear: new Date().getFullYear(),
   igConnected: false,
-  clients: [
-    { id:0, name:'Roma Viajes', industry:'Agencia de viajes', objetivo:'Lead generation', tono:['Aspiracional','Cercano','Confiable'],
-      pilares:['Destinos','Promociones','Testimoniales','Tips de viaje','Lifestyle'],
-      contenidos:[
-        { id:1, titulo:'Reel destinos Europa 2025', formato:'Reel', tipo:'Educativo', pilar:'Destinos', fecha:'2025-04-07', estado:4, plays:2400, er:8.2 },
-        { id:2, titulo:'Story encuesta playa o montaña', formato:'Story', tipo:'Entretenimiento', pilar:'Lifestyle', fecha:'2025-04-08', estado:4, plays:980, er:4.5 },
-        { id:3, titulo:'Post tips maleta de mano', formato:'Post', tipo:'Educativo', pilar:'Tips de viaje', fecha:'2025-04-09', estado:3 },
-        { id:4, titulo:'Reel oferta Caribe', formato:'Reel', tipo:'Promocional', pilar:'Promociones', fecha:'2025-04-11', estado:1 },
-        { id:5, titulo:'Testimonial cliente Cancún', formato:'Reel', tipo:'UGC', pilar:'Testimoniales', fecha:'2025-04-14', estado:1 },
-        { id:6, titulo:'Carrusel 5 destinos mayo', formato:'Carrusel', tipo:'Educativo', pilar:'Destinos', fecha:'2025-04-16', estado:2 },
-        { id:7, titulo:'Reel UGC cliente Brasil', formato:'Reel', tipo:'UGC', pilar:'Testimoniales', fecha:'2025-04-18', estado:2 },
-        { id:8, titulo:'Idea: Behind the scenes agencia', formato:'Reel', tipo:'Entretenimiento', pilar:'Lifestyle', fecha:'2025-04-22', estado:0 },
-      ]
-    },
-    { id:1, name:'MAR Arquitectura', industry:'Estudio de arquitectura', objetivo:'Captación anteproyecto USD 2k', tono:['Premium','Minimalista','Técnico'],
-      pilares:['Proyectos','Proceso creativo','Propietarios','Tendencias','Behind the scenes'],
-      contenidos:[
-        { id:10, titulo:'Reel antes y después proyecto Rosario', formato:'Reel', tipo:'UGC', pilar:'Proyectos', fecha:'2025-04-10', estado:4, plays:1800, er:7.1 },
-        { id:11, titulo:'Post propietarios con terreno', formato:'Post', tipo:'Educativo', pilar:'Propietarios', fecha:'2025-04-12', estado:2 },
-        { id:12, titulo:'Carrusel proceso anteproyecto', formato:'Carrusel', tipo:'Educativo', pilar:'Proceso creativo', fecha:'2025-04-17', estado:0 },
-      ]
-    },
-    { id:2, name:'Murvano', industry:'Mayorista sneakers importados', objetivo:'Captación revendedores', tono:['Urban','Aspiracional','Exclusivo'],
-      pilares:['Producto','Revendedores','Lifestyle urbano','Novedades','Behind the scenes'],
-      contenidos:[
-        { id:20, titulo:'Reel llegada nuevo modelo', formato:'Reel', tipo:'Promocional', pilar:'Producto', fecha:'2025-04-08', estado:4, plays:3200, er:9.4 },
-        { id:21, titulo:'Story cómo ser revendedor', formato:'Story', tipo:'Educativo', pilar:'Revendedores', fecha:'2025-04-11', estado:1 },
-      ]
-    },
-    { id:3, name:'Vinber', industry:'Lubricentro y car wash', objetivo:'Tráfico local y fidelización', tono:['Confiable','Local','Masculino'],
-      pilares:['Servicios','Consejos automotor','Promociones','Clientes','Equipo'],
-      contenidos:[
-        { id:30, titulo:'Reel cambio de aceite express', formato:'Reel', tipo:'Educativo', pilar:'Servicios', fecha:'2025-04-09', estado:4, plays:890, er:5.3 },
-        { id:31, titulo:'Post promo lavado completo', formato:'Post', tipo:'Promocional', pilar:'Promociones', fecha:'2025-04-15', estado:0 },
-      ]
-    },
-    { id:4, name:'Grupo Rani', industry:'Librería, bazar y muebles', objetivo:'Contenido orgánico y comunidad', tono:['Familiar','Cálido','Inspirador'],
-      pilares:['Productos','Inspiración deco','Vuelta al cole','Promociones','Lifestyle hogar'],
-      contenidos:[
-        { id:40, titulo:'Carrusel ideas escritorio en casa', formato:'Carrusel', tipo:'Educativo', pilar:'Inspiración deco', fecha:'2025-04-10', estado:4, plays:560, er:6.8 },
-        { id:41, titulo:'Reel novedades muebles outdoor', formato:'Reel', tipo:'Promocional', pilar:'Productos', fecha:'2025-04-18', estado:0 },
-      ]
-    }
-  ]
+  clients: [],
+  loading: true
 };
+
+// ─── SUPABASE HELPERS ────────────────────────────────────────────────────────
+async function dbLoadClients() {
+  const { data, error } = await supa.from('clientes').select('*').order('created_at');
+  if (error) { console.error('Error cargando clientes:', error); return []; }
+  return data || [];
+}
+
+async function dbLoadContenidos(clienteId) {
+  const { data, error } = await supa.from('contenidos').select('*').eq('cliente_id', clienteId).order('created_at');
+  if (error) { console.error('Error cargando contenidos:', error); return []; }
+  return (data || []).map(c => ({
+    ...c,
+    estado: c.estado || 0,
+    plays: c.plays || null,
+    er: c.er || null
+  }));
+}
+
+async function dbSaveContenido(clienteId, data) {
+  const payload = {
+    cliente_id: clienteId,
+    titulo: data.titulo,
+    formato: data.formato,
+    tipo: data.tipo,
+    pilar: data.pilar,
+    fecha: data.fecha || null,
+    estado: data.estado || 0,
+    guion: data.guion || null,
+    copy: data.copy || null,
+    hashtags: data.hashtags || null,
+    link: data.link || null
+  };
+  if (data.id && typeof data.id === 'string' && data.id.includes('-')) {
+    const { error } = await supa.from('contenidos').update(payload).eq('id', data.id);
+    if (error) console.error('Error actualizando:', error);
+    return data.id;
+  } else {
+    const { data: res, error } = await supa.from('contenidos').insert(payload).select().single();
+    if (error) console.error('Error insertando:', error);
+    return res?.id;
+  }
+}
+
+async function dbUpdateEstado(id, estado, plays, er) {
+  const update = { estado };
+  if (plays) update.plays = plays;
+  if (er) update.er = er;
+  const { error } = await supa.from('contenidos').update(update).eq('id', id);
+  if (error) console.error('Error actualizando estado:', error);
+}
+
+async function dbSaveCliente(data) {
+  const { data: res, error } = await supa.from('clientes').insert({
+    name: data.name,
+    industry: data.industry || null,
+    objetivo: data.objetivo || null,
+    tono: data.tono || ['Profesional','Cercano'],
+    pilares: data.pilares || ['Servicios','Promociones','Comunidad'],
+    dot_color: DOT_COLORS[Math.floor(Math.random() * DOT_COLORS.length)]
+  }).select().single();
+  if (error) console.error('Error creando cliente:', error);
+  return res;
+}
+
+async function dbUpdateClientePilares(clienteId, pilares) {
+  const { error } = await supa.from('clientes').update({ pilares }).eq('id', clienteId);
+  if (error) console.error('Error actualizando pilares:', error);
+}
+
+function showLoading(msg) {
+  document.getElementById('client-list').innerHTML = `<div style="padding:12px 8px;font-size:12px;color:var(--text3)">${msg}</div>`;
+}
 
 const KANBAN_STAGES = ['Idea','Guión / Copy','Diseño / Edición','Aprobación','Publicado'];
 const FORMAT_COLORS = { Reel:'reel', Story:'story', Post:'post', Carrusel:'carrusel' };
@@ -1330,23 +1366,16 @@ const TIPO_COLORS = { Educativo:'edu', Promocional:'promo', UGC:'ugc', Entreteni
 // ─── HELPERS ────────────────────────────────────────────────────────────────
 function getClient() { return state.clients[state.currentClient]; }
 
-function saveToStorage() {
-  try { localStorage.setItem('cf_state', JSON.stringify(state)); } catch(e) {}
-}
+function saveToStorage() { /* datos en Supabase */ }
 
-function loadFromStorage() {
-  try {
-    const saved = localStorage.getItem('cf_state');
-    if (saved) state = JSON.parse(saved);
-  } catch(e) {}
-}
+function loadFromStorage() { /* datos en Supabase */ }
 
 // ─── RENDER CLIENT LIST ──────────────────────────────────────────────────────
 function renderClientList() {
   const list = document.getElementById('client-list');
   list.innerHTML = state.clients.map((c,i) => `
     <div class="client-item ${i === state.currentClient ? 'active' : ''}" onclick="selectClient(${i})">
-      <div class="client-dot" style="background:${DOT_COLORS[i % DOT_COLORS.length]}"></div>
+      <div class="client-dot" style="background:${c.dot_color || DOT_COLORS[i % DOT_COLORS.length]}"></div>
       ${c.name}
     </div>
   `).join('');
@@ -1522,17 +1551,20 @@ function renderKanban() {
   }).join('');
 }
 
-function moveCard(id) {
+async function moveCard(id) {
   const c = getClient();
   const item = c.contenidos.find(x => x.id === id);
   if (!item) return;
   if (item.estado < 4) {
     item.estado++;
+    let plays = null, er = null;
     if (item.estado === 4) {
-      item.plays = Math.floor(Math.random() * 3000 + 500);
-      item.er = +(Math.random() * 8 + 2).toFixed(1);
+      plays = Math.floor(Math.random() * 3000 + 500);
+      er = +(Math.random() * 8 + 2).toFixed(1);
+      item.plays = plays;
+      item.er = er;
     }
-    saveToStorage();
+    await dbUpdateEstado(id, item.estado, plays, er);
     renderKanban();
   }
 }
@@ -1688,12 +1720,13 @@ document.querySelectorAll('.modal-backdrop').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 });
 
-function saveContenido() {
+async function saveContenido() {
   const titulo = document.getElementById('c-titulo').value.trim();
   if (!titulo) return alert('Ingresá un título');
   const c = getClient();
   const editId = document.getElementById('c-edit-id').value;
   const data = {
+    id: editId || null,
     titulo,
     formato: document.getElementById('c-formato').value,
     tipo: document.getElementById('c-tipo').value,
@@ -1705,15 +1738,16 @@ function saveContenido() {
     hashtags: document.getElementById('c-hashtags').value.trim(),
     link: document.getElementById('c-link').value.trim(),
   };
+  const savedId = await dbSaveContenido(c.id, data);
   if (editId) {
-    const idx = c.contenidos.findIndex(x => x.id === parseInt(editId));
+    const idx = c.contenidos.findIndex(x => x.id === editId);
     if (idx !== -1) Object.assign(c.contenidos[idx], data);
   } else {
-    c.contenidos.push({ id: Date.now(), ...data });
+    data.id = savedId;
+    c.contenidos.push(data);
   }
   clearModalContenido();
   closeModal('contenido');
-  saveToStorage();
   renderCurrentView();
 }
 
@@ -1743,35 +1777,35 @@ function openEditModal(id) {
   document.getElementById('modal-contenido').classList.add('open');
 }
 
-function saveCliente() {
+async function saveCliente() {
   const name = document.getElementById('cl-nombre').value.trim();
   if (!name) return alert('Ingresá el nombre del cliente');
-  state.clients.push({
-    id: state.clients.length,
+  const res = await dbSaveCliente({
     name,
     industry: document.getElementById('cl-industria').value,
     objetivo: document.getElementById('cl-objetivo').value,
-    tono: ['Profesional','Cercano'],
-    pilares: ['Servicios','Promociones','Comunidad'],
-    contenidos: []
   });
-  document.getElementById('cl-nombre').value = '';
-  document.getElementById('cl-industria').value = '';
-  document.getElementById('cl-objetivo').value = '';
-  closeModal('client');
-  saveToStorage();
-  renderClientList();
-  selectClient(state.clients.length - 1);
+  if (res) {
+    state.clients.push({ ...res, contenidos: [] });
+    document.getElementById('cl-nombre').value = '';
+    document.getElementById('cl-industria').value = '';
+    document.getElementById('cl-objetivo').value = '';
+    closeModal('client');
+    renderClientList();
+    selectClient(state.clients.length - 1);
+  }
 }
 
-function savePilar() {
+async function savePilar() {
   const name = document.getElementById('p-nombre').value.trim();
   if (!name) return;
   const c = getClient();
-  if (!c.pilares.includes(name)) c.pilares.push(name);
+  if (!c.pilares.includes(name)) {
+    c.pilares.push(name);
+    await dbUpdateClientePilares(c.id, c.pilares);
+  }
   document.getElementById('p-nombre').value = '';
   closeModal('pilar');
-  saveToStorage();
   renderEstrategia();
 }
 
@@ -1939,12 +1973,35 @@ function generateLocal(field, { titulo, formato, tipo, pilar, hint, c }) {
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
-loadFromStorage();
-selectClient(state.currentClient);
-renderClientList();
+async function initApp() {
+  showLoading('Cargando clientes…');
+  const clients = await dbLoadClients();
+  
+  if (clients.length === 0) {
+    showLoading('Sin clientes aún. Creá el primero.');
+    state.clients = [];
+    state.loading = false;
+    renderClientList();
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+    return;
+  }
 
-// Set initial nav active state
-document.querySelectorAll('.nav-item')[0].classList.add('active');
+  // Load contenidos for all clients
+  state.clients = await Promise.all(clients.map(async (c) => ({
+    ...c,
+    tono: c.tono || [],
+    pilares: c.pilares || [],
+    contenidos: await dbLoadContenidos(c.id)
+  })));
+
+  state.loading = false;
+  state.currentClient = 0;
+  renderClientList();
+  selectClient(0);
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+}
+
+initApp();
 </script>
 </body>
 </html>
